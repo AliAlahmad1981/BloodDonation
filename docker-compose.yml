@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+
+  authdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    hostname: authdb
+    container_name: authdb
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Str0ngPass!
+    volumes:
+      - ./volumes/authdb:/var/opt/mssql/data
+
+  donationdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: donationdb
+    hostname: donationdb
+    restart: always
+    ports:
+      - 1434:1433
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Str0ngPass!
+    volumes:
+      - ./volumes/donationdb:/var/opt/mssql/data
+
+  inventorydb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: inventorydb
+    hostname: inventorydb
+    restart: always
+    ports:
+      - 1435:1433
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: Str0ngPass!
+    volumes: 
+      - ./volumes/inventorydb:/var/opt/mssql/data
+
+  authservice:
+    image: authservice
+    build: ./authservice
+    restart: always
+    ports:
+      - 5000:80
+    depends_on:
+      - authdb
+
+  donationservice:
+    image: donationservice
+    build: ./donationservice
+    restart: always
+    ports:
+      - 5002:80
+    depends_on:
+      - donationdb
+
+  inventoryservice:
+    image: inventoryservice
+    build: ./inventoryservice
+    restart: always
+    ports:
+      - 5010:80
+      - 5001:123
+    depends_on:
+      - inventorydb

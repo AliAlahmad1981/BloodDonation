@@ -1,0 +1,22 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+option csharp_namespace = "DonationService";
+
+// The BloodInventory service definition.
+service BloodInventory {
+  // AddBloodPack
+  rpc AddBloodPack(AddBloodPackRequest)returns (AddBloodPackResponse);
+}
+
+// The request message containing the user's name.
+message AddBloodPackRequest {
+  string donorId=2;
+  string bloodId=3;
+  google.protobuf.Timestamp collectionDate=4;
+  google.protobuf.Timestamp expirationDate=5;
+}
+
+// The response message containing the Blood Pack id.
+message AddBloodPackResponse {
+  string id =1;
+}
